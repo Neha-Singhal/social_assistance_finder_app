@@ -28,7 +28,7 @@ class UserPublic(UserBase):
 
 class UserUpdate(UserBase):
     name: str | None = None
-
-
+    location :str | None = None
+    password : str | None = None
 
 
