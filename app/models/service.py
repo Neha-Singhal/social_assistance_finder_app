@@ -1,6 +1,8 @@
-from sqlmodel import Field, Session, SQLModel, create_engine, select
-from typing import Optional
+from sqlmodel import SQLModel,Field,Relationship
+from typing import Optional, List,TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from app.models.ngo_service import NGOService
 
 
 class ServiceBase(SQLModel):
@@ -9,6 +11,7 @@ class ServiceBase(SQLModel):
 
 class Service(ServiceBase, table=True):
     id: int = Field(default=None, primary_key=True)
+    ngo_services: List["NGOService"] = Relationship(back_populates="Service")
 
 
 class ServiceCreate(ServiceBase):

@@ -1,43 +1,94 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from datetime import datetime, timedelta, timezone
+import jwt
+from fastapi import APIRouter , Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlmodel import Session, select
-from datetime import datetime, timedelta
-from jose import jwt, JWTError
+from passlib.context import CryptContext
+from jwt.exceptions import InvalidTokenError
+from typing import Annotated
 from app.database import get_session
-from app.models.user import User, UserCreate, UserPublic
-from app.auth.hashing import hash_password, verify_password
+from app.models.user import User, TokenData, Token
 
+router = APIRouter(prefix="/auth", tags=["auth"])
 SECRET_KEY = "SECRET_KEY"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
-
-router = APIRouter(tags=["Authentication"])
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-def create_access_token(data: dict, expires_delta: timedelta = None):
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/token")
+
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+
+def authenticate_user(email: str, password: str, session: Session):
+    statement = select(User).where(User.email == email)
+    user = session.exec(statement).first()
+    if not user:
+        return False
+    if not verify_password(password, user.password):  # Correct attribute
+        return False
+    return user
+
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
 
-@router.post("/signup", response_model=UserPublic)
-def signup(user: UserCreate, session: Session = Depends(get_session)):
-    user_in_db = session.exec(select(User).where(User.email == user.email)).first()
-    if user_in_db:
-        raise HTTPException(status_code=400, detail="Email already registered")
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_session)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+        token_data = TokenData(email=email)
+    except InvalidTokenError:
+        raise credentials_exception
+    statement = select(User).where(User.email == token_data.email)
+    user = session.exec(statement).first()
+    if user is None:
+        raise credentials_exception
+    return user
 
-    hashed_pw = hash_password(user.password)
-    new_user = User(**user.dict(exclude={"password"}), password=hashed_pw)
-    session.add(new_user)
-    session.commit()
-    session.refresh(new_user)
-    return new_user
+
+async def get_current_active_user(
+    current_user: Annotated[User, Depends(get_current_user)]
+):
+    #if not current_user.is_active:
+        #raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
 
 
-@router.post("/login")
-def login(email: str, password: str, session: Session = Depends(get_session)):
-    user = session.exec(select(User).where(User.email == email)).first()
-    if not user or not verify_password(password, user.password):
-        raise HTTPException(status_code=400, detail="Invalid credentials")
-    token = create_access_token(data={"sub": str(user.id)})
-    return {"access_token": token, "token_type": "bearer"}
+async def verify_ownership_or_admin(
+        user_id: int,
+        current_user: User = Depends(get_current_active_user),
+        session: Session = Depends(get_session)
+):
+    target_user = session.get(User, user_id)
+    if not target_user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if not (current_user.is_admin or current_user.id == user_id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You don't have permission for this action"
+        )
+    return target_user
