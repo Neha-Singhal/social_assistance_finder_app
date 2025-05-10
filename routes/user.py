@@ -73,7 +73,7 @@ def delete_user(
          raise HTTPException(status_code=404, detail="User not found")
     session.delete(user_db)
     session.commit()
-    return {"ok": True}
+    return user_db
 
 
 @router.post("/token", response_model=Token)

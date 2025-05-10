@@ -1,6 +1,6 @@
 from enum import Enum
 from sqlmodel import Field, SQLModel,Relationship
-from typing import Optional, TYPE_CHECKING
+from typing import Optional,TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.models.user import User

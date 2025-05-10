@@ -15,8 +15,10 @@ class SupportRequest(SupportRequestBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
-    user : Optional["User"] = Relationship(back_populates="support_requests")
-    ngo : Optional["User"] = Relationship(back_populates= "assigned_requests")
+    user : Optional["User"] = Relationship(back_populates="support_requests",sa_relationship_kwargs={"foreign_keys": "[SupportRequest.user_id]"}
+)
+    ngo : Optional["User"] = Relationship(back_populates= "assigned_requests",sa_relationship_kwargs={"foreign_keys": "[SupportRequest.ngo_id]"}
+)
 
 
 class SupportRequestCreate(SupportRequestBase):

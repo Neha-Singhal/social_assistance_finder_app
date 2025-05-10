@@ -1,13 +1,9 @@
-from sqlalchemy.orm import Relationship
-from sqlmodel import SQLModel, Field, Session, create_engine, select
+from sqlmodel import SQLModel, Field,Relationship, Session, create_engine, select
 from typing import Optional,TYPE_CHECKING
 
-from app.models.user import User
-
-
-#if TYPE_CHECKING:
-# from app.models.user import User
-# from app.models.service import Service
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.service import Service
 
 
 class NGOServiceBase(SQLModel):
@@ -17,8 +13,8 @@ class NGOServiceBase(SQLModel):
 
 class NGOService(NGOServiceBase, table=True):
     id : int = Field(default= None, primary_key= True)
-    ngo : User | None = Relationship(back_populates="ngo_services")
-    service : User | None = Relationship(back_populates="ngo_services")
+    ngo : Optional["User"] = Relationship(back_populates="ngo_services")
+    service : Optional["Service"]= Relationship(back_populates="ngo_services")
 
 
 class NGOServiceCreate(NGOServiceBase):
