@@ -13,8 +13,6 @@ class NGOServiceBase(SQLModel):
 
 class NGOService(NGOServiceBase, table=True):
     id : int = Field(default= None, primary_key= True)
-    ngo : Optional["User"] = Relationship(back_populates="ngo_services")
-    service : Optional["Service"]= Relationship(back_populates="ngo_services")
 
 
 class NGOServiceCreate(NGOServiceBase):

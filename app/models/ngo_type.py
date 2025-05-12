@@ -24,7 +24,7 @@ class NgoType(NGOTypeBase, table=True):
     id:Optional[int] = Field(default=None, primary_key=True)
     ngo_id: int = Field(foreign_key="user.id")
     type: NGOCategory
-    ngo: Optional["User"] = Relationship(back_populates="ngo_types")
+
 
 
 class NGOTypeCreate(NGOTypeBase):

@@ -59,9 +59,9 @@ def delete_support_request(request_id: int,
     request = session.get(SupportRequest, request_id)
     if not request:
         raise HTTPException(status_code=404, detail="Support request not found")
-    if request. created_by != current_user.id:
+    if request. user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized to delete this request")
     session.delete(request)
     session.commit()
-    return {"ok": True}
+    return {"message":" Request deleted successfully"}
 
