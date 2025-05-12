@@ -1,4 +1,4 @@
-from app.models.user import User
+from app.models.user import User, UserPublic
 from typing import Optional, TYPE_CHECKING
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship
@@ -33,6 +33,8 @@ class SupportRequestRead(SupportRequestBase):
     id: int
     created_at: datetime
     updated_at: datetime
+    ngo : Optional[UserPublic] = None
+
 
 
 class SupportRequestUpdate(SQLModel):
