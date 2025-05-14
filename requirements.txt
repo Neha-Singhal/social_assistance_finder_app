@@ -6,4 +6,4 @@ pydantic
 python-jose[cryptograpy]
 passlib[bcrypt]
 python-dotenv
-openai
+requests

@@ -1,10 +1,9 @@
 from enum import Enum
-from sqlmodel import Field, SQLModel,Relationship
-from typing import Optional,TYPE_CHECKING
+from sqlmodel import Field, SQLModel, Relationship
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from app.models.user import User
-
+    from .user import User
 
 class NGOCategory(str, Enum):
     Human_Rights_NGOs = "Human_Rights_NGOs"
@@ -14,28 +13,22 @@ class NGOCategory(str, Enum):
     Relief_and_Recovery_NGOs = "Relief_and_Recovery_NGOs"
     Advocacy_NGO = "Advocacy_NGO"
 
-
 class NGOTypeBase(SQLModel):
-    ngo_id : int
-    type : NGOCategory
+    type: NGOCategory
 
-
-class NgoType(NGOTypeBase, table=True):
-    id:Optional[int] = Field(default=None, primary_key=True)
+class NGOType(NGOTypeBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
     ngo_id: int = Field(foreign_key="user.id")
     type: NGOCategory
 
-
+    ngo: Optional["User"] = Relationship(back_populates="ngo_type")
 
 class NGOTypeCreate(NGOTypeBase):
-    pass
-
+    ngo_id: int
 
 class NGOTypeRead(NGOTypeBase):
     id: int
-
+    ngo_id: int
 
 class NGOTypeUpdate(SQLModel):
     type: Optional[NGOCategory] = None
-
-

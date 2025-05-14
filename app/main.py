@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from app.database import create_db_and_tables, SessionDep
 from app.auth import auth
+from app.gemini_helper import ask_gemini
 from routes import user , ngo_type, service, ngo_service, support_request
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 app = FastAPI(
@@ -20,6 +24,7 @@ app.include_router(support_request.router)
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
+    print("Gemini test:", ask_gemini("Say hello to the Social Assistance Finder!"))
 
 
 

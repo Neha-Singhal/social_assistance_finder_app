@@ -1,9 +1,12 @@
 from sqlmodel import SQLModel,Field,Relationship
-from typing import Optional, List,TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Optional
 
 if TYPE_CHECKING:
-    from app.models.ngo_service import NGOService
-
+    from .user import User
+    from .support_request import SupportRequest
+    from .service import Service
+    from .ngo_service import NGOService
+    from .ngo_type import NGOType
 
 class ServiceBase(SQLModel):
     name: str
@@ -11,6 +14,8 @@ class ServiceBase(SQLModel):
 
 class Service(ServiceBase, table=True):
     id: int = Field(default=None, primary_key=True)
+
+    ngo_services: List["NGOService"] = Relationship(back_populates="service")
 
 
 
