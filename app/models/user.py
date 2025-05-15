@@ -18,6 +18,7 @@ class UserBase(SQLModel):
     email: Optional[str] = Field(default=None, index=True, unique=True)
     location: str
     user_type: UserType
+    phone_number: Optional[str] = Field(default=None, nullable=True)
 
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
