@@ -4,6 +4,7 @@ from app.auth import auth
 from app.gemini_helper import ask_gemini
 from routes.send_whatsapp import router as whatsapp_router
 from routes import user , ngo_type, service, ngo_service, support_request
+from routes import message
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -22,7 +23,7 @@ app.include_router(service.router)
 app.include_router(ngo_service.router)
 app.include_router(support_request.router)
 app.include_router(whatsapp_router)
-
+app.include_router(message.router)
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()

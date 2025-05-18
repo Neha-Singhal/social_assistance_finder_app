@@ -22,8 +22,8 @@ GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1/models/{GEMINI_M
 
 
 class MessageSchema(BaseModel):
-    to: str  # WhatsApp number like +4916xxxxxx
-    body: str  # The message content to send via WhatsApp
+    to: str
+    body: str
 
 
 class AIMessageRequest(BaseModel):
@@ -34,10 +34,19 @@ class AIMessageRequest(BaseModel):
 def send_whatsapp_message(to: str, body: str) -> str:
     message = client.messages.create(
         body=body,
-        from_=f"whatsapp:{whatsapp_number}",
+        from_="whatsapp:+14155238886",
         to=f"whatsapp:{to}"
     )
     return message.sid
+
+
+@router.post("/send-whatsapp")
+def send_message(payload: MessageSchema):
+    try:
+        sid = send_whatsapp_message(payload.to, payload.body)
+        return {"status": "sent", "message_sid": sid}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 def ask_gemini(user_prompt: str) -> str:
@@ -63,13 +72,3 @@ def ask_gemini(user_prompt: str) -> str:
     else:
         return f"Gemini error {response.status_code}: {response.text}"
 
-
-@router.post("/send-ai-whatsapp/")
-def send_ai_response(message: AIMessageRequest):
-    gemini_reply = ask_gemini(message.prompt)
-
-    try:
-        sid = send_whatsapp_message(message.to, gemini_reply)
-        return {"status": "sent", "gemini_reply": gemini_reply, "whatsapp_sid": sid}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to send WhatsApp message: {e}")
