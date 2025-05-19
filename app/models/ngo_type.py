@@ -18,9 +18,8 @@ class NGOTypeBase(SQLModel):
 
 class NGOType(NGOTypeBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    ngo_id: int = Field(foreign_key="user.id")
+    ngo_id: int = Field(foreign_key="user.id", ondelete="CASCADE")
     type: NGOCategory
-
     ngo: Optional["User"] = Relationship(back_populates="ngo_type")
 
 class NGOTypeCreate(NGOTypeBase):

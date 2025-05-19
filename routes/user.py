@@ -23,6 +23,7 @@ def create_user(user: UserCreate, session: Session = Depends(get_session)):
         password=hashed_password,
         user_type=user.user_type,
         location=user.location,
+        phone_number=user.phone_number,
     )
     session.add(db_user)
     session.commit()

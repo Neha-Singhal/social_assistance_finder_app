@@ -8,8 +8,8 @@ if TYPE_CHECKING:
     from .ngo_type import NGOType
 
 class NGOServiceBase(SQLModel):
-    ngo_id : int = Field(foreign_key="user.id")
-    service_id: int = Field(foreign_key="service.id")
+    ngo_id : int = Field(foreign_key="user.id", ondelete="CASCADE")
+    service_id: int = Field(foreign_key="service.id", ondelete="CASCADE")
 
 
 class NGOService(NGOServiceBase, table=True):
@@ -18,6 +18,7 @@ class NGOService(NGOServiceBase, table=True):
     ngo: "User" = Relationship(
         back_populates="ngo_services",
         sa_relationship_kwargs={"foreign_keys": "[NGOService.ngo_id]"}
+
     )
 
     service: "Service" = Relationship(back_populates="ngo_services")

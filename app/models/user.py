@@ -18,7 +18,7 @@ class UserBase(SQLModel):
     email: Optional[str] = Field(default=None, index=True, unique=True)
     location: str
     user_type: UserType
-    phone_number: Optional[str] = Field(default=None, nullable=True)
+    phone_number: Optional[str] = Field(default=None)
 
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -29,24 +29,25 @@ class User(UserBase, table=True):
     # Support requests created by user
     support_requests: List["SupportRequest"] = Relationship(
         back_populates="user",
-        sa_relationship_kwargs={"foreign_keys": "[SupportRequest.user_id]"}
+        sa_relationship_kwargs={"cascade": "all, delete-orphan", "foreign_keys": "[SupportRequest.user_id]"}
     )
 
     # Support requests assigned to NGO
     assigned_requests: List["SupportRequest"] = Relationship(
         back_populates="ngo",
-        sa_relationship_kwargs={"foreign_keys": "[SupportRequest.ngo_id]"}
+        sa_relationship_kwargs={"cascade": "all, delete-orphan", "foreign_keys": "[SupportRequest.ngo_id]"}
     )
 
     # Services offered by this NGO
     ngo_services: List["NGOService"] = Relationship(
         back_populates="ngo",
-        sa_relationship_kwargs={"foreign_keys": "[NGOService.ngo_id]"}
+        sa_relationship_kwargs={"cascade": "all, delete-orphan", "foreign_keys": "[NGOService.ngo_id]"}
     )
 
     ngo_type: Optional["NGOType"] = Relationship(
         back_populates="ngo",
         sa_relationship_kwargs={
+            "cascade": "all, delete-orphan",
             "primaryjoin": "User.id==foreign(NGOType.ngo_id)",
             "uselist": False
         }

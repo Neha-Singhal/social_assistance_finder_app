@@ -1,3 +1,6 @@
+import ast
+import re
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 from app.auth.auth import User, get_current_active_user
@@ -9,12 +12,25 @@ from routes.send_whatsapp import send_whatsapp_message, MessageSchema
 
 router = APIRouter(prefix="/support-request", tags=["Support Requests"])
 
+def clean_gemini_response(raw: str) -> list[str]:
+    try:
+        # Remove any ```python or ``` markers and whitespace
+        cleaned = re.sub(r"```(?:python)?", "", raw).strip("` \n")
+        # Safely evaluate the string as a Python list
+        return ast.literal_eval(cleaned)
+    except Exception:
+        return [raw]
+
 
 @router.get("/recommend-support")
 def recommend_service():
-    prompt = "Suggest 5 mental health support NGOs in Berlin. Don't add any additional information. Return a python list as result."
-    recommendation = ask_gemini(prompt)
-    return {"recommendation": recommendation}
+    prompt = (
+        "Suggest 5 mental health support NGOs in Berlin. "
+        "Return only a raw Python list like: [\"NGO1\", \"NGO2\"] with no other text."
+    )
+    raw_response = ask_gemini(prompt)
+    recommendations = clean_gemini_response(raw_response)
+    return {"recommendation": recommendations}
 
 
 @router.post("/", response_model=SupportRequestRead)
@@ -38,7 +54,7 @@ def create_support_request(
     session.commit()
     session.refresh(new_request)
 
-    # Send message to user
+
     if current_user.phone_number:
         user_message = MessageSchema(
             to=current_user.phone_number,

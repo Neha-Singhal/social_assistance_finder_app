@@ -7,8 +7,8 @@ if TYPE_CHECKING:
     from app.models.user import User
 
 class SupportRequestBase(SQLModel):
-    user_id: int = Field(foreign_key="user.id")
-    ngo_id: int = Field(foreign_key="user.id")
+    user_id: int = Field(foreign_key="user.id", ondelete="CASCADE")
+    ngo_id: int = Field(foreign_key="user.id", ondelete="CASCADE")
     comment: Optional[str] = None
 
 class SupportRequest(SupportRequestBase, table=True):

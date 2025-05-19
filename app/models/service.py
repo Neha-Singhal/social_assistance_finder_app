@@ -15,7 +15,7 @@ class ServiceBase(SQLModel):
 class Service(ServiceBase, table=True):
     id: int = Field(default=None, primary_key=True)
 
-    ngo_services: List["NGOService"] = Relationship(back_populates="service")
+    ngo_services: List["NGOService"] = Relationship(back_populates="service", cascade_delete=True)
 
 
 

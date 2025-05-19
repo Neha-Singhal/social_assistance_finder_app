@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import select, Session
 from app.models.ngo_service import NGOService
-from app.models.ngo_type import NGOType, NGOTypeRead, NGOTypeUpdate
+from app.models.ngo_type import NGOType, NGOTypeRead, NGOTypeUpdate, NGOTypeCreate
 from app.database import get_session
 from app.auth.auth import get_current_user
 from app.models.service import  Service,ServiceRead
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/ngo-types", tags=["NGO Types"])
 
 @router.post("/", response_model=NGOTypeRead)
 def create_ngo_type(
-    ngo_type: NGOType,
+    ngo_type: NGOTypeCreate,
     session: Session = Depends(get_session),
 ):
     new_ngo_type = NGOType(**ngo_type.dict())
