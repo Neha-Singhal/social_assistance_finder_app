@@ -95,3 +95,21 @@ You can deploy to:
 	•	Render
 	•	Vercel (with serverless FastAPI)
 	•	Docker-compatible VPS
+
+Sample command for Render:
+# render.yaml
+services:
+  - type: web
+    name: social-assistance-finder
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port 10000
+
+👥 Contributors
+	•	Neha Singhal
+
+📄 License
+
+MIT License. Feel free to use, modify, and distribute.
+
+
