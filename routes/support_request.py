@@ -20,7 +20,7 @@ def clean_gemini_response(raw: str) -> list[str]:
         return ast.literal_eval(cleaned)
     except Exception:
         return [raw]
-
+  
 
 @router.get("/recommend-support")
 def recommend_service():

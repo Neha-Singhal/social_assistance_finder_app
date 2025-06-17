@@ -12,6 +12,7 @@ class NGOServiceBase(SQLModel):
     service_id: int = Field(foreign_key="service.id", ondelete="CASCADE")
 
 
+
 class NGOService(NGOServiceBase, table=True):
     id : int = Field(default= None, primary_key= True)
 

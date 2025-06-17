@@ -4,7 +4,6 @@ from twilio.rest import Client
 import os
 import requests
 from dotenv import load_dotenv
-
 from sqlmodel import Session, select
 from app.database import get_session
 from app.models import User

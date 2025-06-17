@@ -7,7 +7,7 @@ from passlib.context import CryptContext
 from jwt.exceptions import InvalidTokenError
 from typing import Annotated
 from app.database import get_session
-from app.models.user import User, TokenData, Token
+from app.models.user import User, TokenData
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 SECRET_KEY = "SECRET_KEY"
@@ -17,7 +17,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/token")
-
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)

@@ -29,9 +29,9 @@ def start_chat():
         print(f"Gemini: {gemini_reply}")
         try:
             sid = send_whatsapp_message("whatsapp:+491626817993", gemini_reply)
-            print(f"✅ WhatsApp message sent! SID: {sid}")
+            print(f"WhatsApp message sent! SID: {sid}")
         except Exception as e:
-            print(f"❌ Failed to send WhatsApp message: {e}")
+            print(f" Failed to send WhatsApp message: {e}")
 
 if __name__ == "__main__":
     start_chat()

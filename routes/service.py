@@ -1,19 +1,19 @@
 from typing import List
-import service
 from fastapi import APIRouter,Depends, HTTPException
 from sqlalchemy.orm import session
 from sqlmodel import select, Session
+from app.models import service
 from app.models.service import Service ,ServiceRead, ServiceCreate, ServiceUpdate
 from app.database import get_session
 from app.auth.auth import get_current_user
 from app.models.support_request import SupportRequest, SupportRequestRead
 from app.models.user import User
 
-router = APIRouter(prefix="/service" , tags=["Services"])
+router = APIRouter(prefix="/services" , tags=["Services"])
 
 
 
-@router.post("/ServiceRead/", response_model=ServiceRead)
+@router.post("/ServiceRead", response_model=ServiceRead)
 def create_service(service:ServiceCreate, session: Session = Depends(get_session)):
     db_service = Service(**service.dict())
     session.add(db_service)
@@ -22,16 +22,11 @@ def create_service(service:ServiceCreate, session: Session = Depends(get_session
     return db_service
 
 @router.get("/ServiceRead",response_model=list[ServiceRead])
-def read_service(session: Session =Depends(get_session)):
+def read_service(service_id: int,session: Session =Depends(get_session)):
     return session.exec(select(Service)).all()
 
 
-@router.get("/ServiceRead/{service_id}",response_model=ServiceRead)
-def read_service(service_id:int, session = Depends(get_session)):
-    return  session.exec(select(service)).all()
-
-
-@router.get("/service/{service_id}",response_model=ServiceRead)
+@router.put("/service/{service_id}",response_model=ServiceRead)
 def update_service(service_id: int,service_update: ServiceUpdate,
     session: Session = Depends(get_session),
     current_user: User = Depends(get_current_user),

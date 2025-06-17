@@ -13,6 +13,10 @@ from typing import List
 
 router = APIRouter(prefix="/users", tags=["users"])
 
+@router.get("/me/", response_model=UserPublic)
+async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
+    return current_user
+
 
 @router.post("/", response_model=UserPublic)
 def create_user(user: UserCreate, session: Session = Depends(get_session)):
