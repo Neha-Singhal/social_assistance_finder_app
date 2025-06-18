@@ -43,7 +43,7 @@ def get_auth_header():
 
 
 def test_login_ngo():
-    response = login_for_access_token()
+    response = login_for_access_token() #try to get response
     assert response.status_code == 200
 
 
