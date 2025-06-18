@@ -14,6 +14,7 @@ class NGOServiceBase(SQLModel):
 
 
 class NGOService(NGOServiceBase, table=True):
+    __tablename__ = "ngo_services"
     id : int = Field(default= None, primary_key= True)
 
     ngo: "User" = Relationship(

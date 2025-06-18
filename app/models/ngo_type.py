@@ -17,6 +17,7 @@ class NGOTypeBase(SQLModel):
     type: NGOCategory
 
 class NGOType(NGOTypeBase, table=True):
+    __tablename__ = "ngo_types"
     id: Optional[int] = Field(default=None, primary_key=True)
     ngo_id: int = Field(foreign_key="user.id", ondelete="CASCADE")
     type: NGOCategory

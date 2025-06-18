@@ -13,6 +13,7 @@ class ServiceBase(SQLModel):
 
 
 class Service(ServiceBase, table=True):
+    __tablename__ = "services"
     id: int = Field(default=None, primary_key=True)
 
     ngo_services: List["NGOService"] = Relationship(back_populates="service", cascade_delete=True)

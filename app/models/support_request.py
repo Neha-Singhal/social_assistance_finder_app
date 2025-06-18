@@ -7,11 +7,12 @@ if TYPE_CHECKING:
     from app.models.user import User
 
 class SupportRequestBase(SQLModel):
-    user_id: int = Field(foreign_key="user.id", ondelete="CASCADE")
-    ngo_id: int = Field(foreign_key="user.id", ondelete="CASCADE")
+    user_id: int = Field(foreign_key="users.id", ondelete="CASCADE")
+    ngo_id: int = Field(foreign_key="users.id", ondelete="CASCADE")
     comment: Optional[str] = None
 
 class SupportRequest(SupportRequestBase, table=True):
+    __tablename__ = "support_requests"
     id: Optional[int] = Field(default=None, primary_key=True)
     gemini_response: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)

@@ -24,6 +24,8 @@ app.include_router(ngo_service.router)
 app.include_router(support_request.router)
 app.include_router(whatsapp_router)
 app.include_router(message.router)
+
+
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
