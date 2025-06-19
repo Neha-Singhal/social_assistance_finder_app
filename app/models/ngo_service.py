@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class NGOServiceBase(SQLModel):
     ngo_id : int = Field(foreign_key="user.id", ondelete="CASCADE")
-    service_id: int = Field(foreign_key="service.id", ondelete="CASCADE")
+    service_id: int = Field(foreign_key="services.id", ondelete="CASCADE")
 
 
 

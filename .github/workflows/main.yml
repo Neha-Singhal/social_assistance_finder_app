@@ -2,7 +2,7 @@ name: Python CI
 
 on:
   push:
-    branches: [ "main" ]  # Run on push to the main branch. Change this if you are using a different branch.
+    branches: [ "main" ]
 
 jobs:
   test:
@@ -29,7 +29,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3  # Check out the code from the repository
+      uses: actions/checkout@v3
 
     - name: Set up Python
       uses: actions/setup-python@v4
