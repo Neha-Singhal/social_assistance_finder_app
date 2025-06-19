@@ -12,8 +12,8 @@ class MessageCreate(BaseModel):
 class Message(SQLModel, table=True):
     __tablename__ = "messages"
     id: int = Field(default=None, primary_key=True)
-    sender_id: int = Field(foreign_key="user.id")
-    receiver_id: int = Field(foreign_key="user.id")
+    sender_id: int = Field(foreign_key="users.id")
+    receiver_id: int = Field(foreign_key="users.id")
     body: str
     via: str = "whatsapp"
     timestamp: datetime = Field(default_factory=datetime.utcnow)

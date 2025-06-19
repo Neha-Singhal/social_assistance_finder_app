@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from .ngo_type import NGOType
 
 class NGOServiceBase(SQLModel):
-    ngo_id : int = Field(foreign_key="user.id", ondelete="CASCADE")
+    ngo_id : int = Field(foreign_key="users.id", ondelete="CASCADE")
     service_id: int = Field(foreign_key="services.id", ondelete="CASCADE")
 
 
