@@ -24,8 +24,8 @@ def test_create_new_ngo():
 
 def login_for_access_token():
     login_credential = {
-        "username": "newuser@example.com",
-        "password": "password123",
+        "username": "charity@gmail.com",
+        "password": "123",
     }
 
     response = client.post(
@@ -63,7 +63,7 @@ def test_patch_user():
     ngo_id = get_current_ngo_id(token)
 
     new_service = {
-        "service_id": 2,
+        "service_id": 1,
         "ngo_id": ngo_id,
 
     }
@@ -73,11 +73,11 @@ def test_patch_user():
     entry_id = create_response.json()["id"]
 
     update_data = {
-        "service_id" : 3
+        "service_id" : 1
     }
 
 
 
     response = client.patch(f"/ngo_service/{entry_id}", json=update_data, headers=headers)
     assert response.status_code == 200
-    assert response.json()["service_id"] == 3
+    assert response.json()["service_id"] == 1

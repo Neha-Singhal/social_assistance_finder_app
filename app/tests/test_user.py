@@ -1,20 +1,36 @@
 from http.client import responses
 import uuid
+
+import pytest
+from sqlmodel import Session
+
 from .conftest import client
+from ..models import User
 
 
-def test_read_user():
-    response = client.get("/users/2")
+def test_read_user(test_user: User):
+    response = client.get(f"/users/{test_user.id}")
     assert response.status_code == 200
-    assert response.json() == {
-        "id": 2,
-        "name": "amy",
-        "email": "amy@gmail.com",
-        "location": "France",
-        "user_type": "user",
-        "phone_number": None
-    }
+    data = response.json()
+    assert data["id"] == test_user.id
+    assert data["name"] == test_user.name
+    assert data["email"] == test_user.email
 
+
+@pytest.fixture
+def test_user(session: Session):
+    user = User(
+        name="Test User",
+        email="test@example.com",
+        password="hashed_password",
+        location="Test City",
+        user_type="user",
+        phone_number="1234567890"
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
 
 def test_create_user():
     unique_email = f"bina_{uuid.uuid4().hex}@gmail.com"

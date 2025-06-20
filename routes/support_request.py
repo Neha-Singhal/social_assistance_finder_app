@@ -50,9 +50,11 @@ def create_support_request(
         user_id=current_user.id
     )
 
+
     session.add(new_request)
     session.commit()
     session.refresh(new_request)
+    print(new_request)
 
 
     if current_user.phone_number:
@@ -70,7 +72,7 @@ def create_support_request(
     if ngo and ngo.phone_number:
         ngo_message = MessageSchema(
             to=ngo.phone_number,
-            body=f"New support request from {current_user.name} for '{new_request.service}'."
+            body=f"New support request from {current_user.name} for '{new_request.comment}'."
         )
         try:
             send_whatsapp_message(ngo_message)

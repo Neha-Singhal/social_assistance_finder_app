@@ -16,8 +16,8 @@ class UserType(str, Enum):
 class UserBase(SQLModel):
     name: str = Field(index=True)
     email: Optional[str] = Field(default=None, index=True, unique=True)
-    location: str
-    user_type: UserType
+    location: Optional[str] = None
+    user_type: Optional[UserType] = None
     phone_number: Optional[str] = Field(default=None)
 
 
@@ -64,6 +64,9 @@ class UserCreate(UserBase):
 
 class UserPublic(UserBase):
     id: int
+    created_at: datetime
+    updated_at: datetime
+
 
 class UserUpdate(UserBase):
     name: Optional[str] = None
