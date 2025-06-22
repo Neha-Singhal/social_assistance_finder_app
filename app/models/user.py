@@ -56,9 +56,6 @@ class User(UserBase, table=True):
     )
 
 
-
-# --- SCHEMA MODELS ---
-
 class UserCreate(UserBase):
     password: str
 

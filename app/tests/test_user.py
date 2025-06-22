@@ -1,11 +1,9 @@
 from http.client import responses
 import uuid
-
 import pytest
 from sqlmodel import Session
-
 from .conftest import client
-from ..models import User
+from ..models.user import User
 
 
 def test_read_user(test_user: User):
