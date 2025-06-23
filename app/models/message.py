@@ -9,6 +9,7 @@ class MessageCreate(BaseModel):
     body: str
 
 
+# This is the message class
 class Message(SQLModel, table=True):
     __tablename__ = "messages"
     id: int = Field(default=None, primary_key=True)
