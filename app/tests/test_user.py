@@ -56,7 +56,7 @@ def test_get_all_user():
 
 
 def test_get_user_by_id():
-    user_id = 4
+    user_id = 1
     response = client.get(f"/users/{user_id}")
     assert response.status_code == 200
     data = response.json()

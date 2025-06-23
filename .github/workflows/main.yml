@@ -24,7 +24,14 @@ jobs:
           --health-retries 5
 
     env:
-      DATABASE_URL: postgresql://testuser:testpass@localhost:5432/testdb
+      DATABASE_URL=${{secrets.DATABASE_URL}}
+      SECRET_KEY=${{secrets.SECRET_KEY}}
+      ALGORITHM=${{secrets.ALGORITHM}}
+      ACCESS_TOKEN_EXPIRE_MINUTES=${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
+      GEMINI_API_KEY=${{secrets. GEMINI_API_KEY}}
+      TWILIO_ACCOUNT_SID=${{secrets.TWILIO_ACCOUNT_SID}}
+      TWILIO_AUTH_TOKEN=${{secrets.TWILIO_AUTH_TOKEN}}
+      TWILIO_WHATSAPP_NUMBER=${{secrets.TWILIO_WHATSAPP_NUMBER}}
 
 
     steps:
