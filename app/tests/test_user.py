@@ -17,9 +17,10 @@ def test_read_user(test_user: User):
 
 @pytest.fixture
 def test_user(session: Session):
+    unique_email = f"test_{uuid.uuid4().hex[:8]}@example.com"
     user = User(
         name="Test User",
-        email="test@example.com",
+        email=unique_email,
         password="hashed_password",
         location="Test City",
         user_type="user",

@@ -1,12 +1,19 @@
 import pytest
 from .conftest import client
-from app.models.user import User
+from app.models.user import User, UserType
 from app.main import app
 from app.auth.auth import get_current_user
 
 # Override get_current_user
 def override_get_current_user():
-    return User(id=1, name="Test User", email="test@example.com", password="fakehashed")
+    return User(id=1,
+                name="Test User",
+                email="test@example.com",
+                password="fakehashed",
+                user_type = UserType.user,
+                location = "Delhi",
+                phone_number = "1234567890"
+                )
 
 app.dependency_overrides[get_current_user] = override_get_current_user
 

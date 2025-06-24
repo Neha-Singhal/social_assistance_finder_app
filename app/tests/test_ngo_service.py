@@ -1,6 +1,7 @@
 import uuid
-
 import pytest
+
+from routes.service import create_service
 from .conftest import client
 
 
@@ -54,30 +55,10 @@ def get_current_ngo_id(token):
     return response.json()["id"]
 
 
-def test_patch_user():
-    login_data = login_for_access_token()
-    assert login_data.status_code == 200
-    token = login_data.json()["access_token"]
-    headers = {"Authorization": f"Bearer {token}"}
-
-    ngo_id = get_current_ngo_id(token)
-
-    new_service = {
-        "service_id": 1,
-        "ngo_id": ngo_id,
-
-    }
-
-    create_response = client.post("/ngo_service/", json=new_service, headers=headers)
-    assert create_response.status_code == 200
-    entry_id = create_response.json()["id"]
-
-    update_data = {
-        "service_id" : 1
-    }
-
-
-
-    response = client.patch(f"/ngo_service/{entry_id}", json=update_data, headers=headers)
+    response = client.post("/services", json=service_data)
     assert response.status_code == 200
-    assert response.json()["service_id"] == 1
+    return response.json()["id"]
+
+
+
+

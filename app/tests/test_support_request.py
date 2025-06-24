@@ -3,6 +3,7 @@ from app.main import app
 from app.auth.auth import get_current_user
 from app.models.user import User
 import pytest
+pytestmark = pytest.mark.asyncio
 
 # Step 1: Override the dependency
 def override_get_current_user():
